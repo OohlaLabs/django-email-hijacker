@@ -3,6 +3,7 @@
 from __future__ import unicode_literals
 
 from django.core.mail.backends.base import BaseEmailBackend
+from django.conf import settings
 
 try:
     from django.utils.module_loading import import_string
@@ -16,7 +17,7 @@ class EmailBackend(BaseEmailBackend):
 
     def __init__(self, *args, **kwargs):
         super(EmailBackend, self).__init__(*args, **kwargs)
-        self.hijacked = import_string(EmailHijacker.EMAIL_BACKEND)(*args, **kwargs)
+        self.hijacked = import_string(EmailHijacker.EMAIL_BACKEND or settings.EMAIL_BACKEND)(*args, **kwargs)
 
     def open(self):
         self.hijacked.open()
